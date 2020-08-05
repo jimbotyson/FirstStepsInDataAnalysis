@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+
+<title>First Steps in Data Analysis with R</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+<!-- taken from https://github.com/rstudio/rmarkdown/blob/67b7f5fc779e4cfdfd0f021d3d7745b6b6e17149/inst/rmd/h/default.html#L296-L362 -->
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+<!-- end tabsets -->
+
+
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<div id="section-introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This is an introduction to the use of R with RStudio for data analysis. It is not an introduction to R generally, and some topics that would always be covered in such a course are treated only very briefly here: building vectors and matrices; writing functions; vectorised mathematics and so on. Instead we concentrate on data management and analysis tasks.</p>
+<p>I think you can usefully follow this tutorial even if you haven’t learned to program in R. We will take a little time to learn the very basics and also to learn about RStudio.</p>
+<div id="section-tips-about-using-the-learning-material" class="section level3">
+<h3>Tips about using the learning material</h3>
+<p>You should work though the material progressively - it is cumulative and deliberately sequenced. (The left hand menu will show you which parts of the course you have completed).</p>
+<p>As well as exercises you can carry out while following the learning material, you will also begin to develop an R script. I will give you instructions on what to include as we go. You should learn to use the RStudio editor as you write the script.</p>
+<p>Throughout you are asked to run snippets of R code. You can write code directly into the course web pages and click a <strong>run code</strong> button to execute it. The run boxes usually have a <strong>solution</strong> button to see the correct code and a <strong>start over</strong> button to start again from scratch.</p>
+<p>Where you are required to write code, I have tried hard to scaffold the method required for you so that you can work out what the code should look like. In almost all cases, in case my scaffolding fails, I have provided the code solution to these exercises and in this way, you should not miss out on any steps that have a cumulative effect.</p>
+</div>
+</div>
+<div id="section-r-the-very-basics-with-rstudio" class="section level2">
+<h2>R the Very basics with RStudio</h2>
+<div id="section-the-rstudio-ide" class="section level3">
+<h3>The RStudio IDE</h3>
+<p>RStudio is an application that combines in one interface an editor for R programs; access to the R language interpreter; file, help and graphs browser; and a history and data environment viewer. The first time you start RStudio it should look something like this:</p>
+<div class="figure">
+<img src="images/rstudioide1-half.png" title="The RStudio IDE showing the three initial panes." alt="" />
+<p class="caption">The RStudio IDE</p>
+</div>
+<p>You can use the RStudio IDE to do on-the-fly computations in R; to write R language scripts to automate analysis tasks; and to write reports and presentations in the RMarkdown language.</p>
+<p>The main elements of the application are called <strong>panes</strong>. On the left taking up the height of the whole screen is the <strong>console</strong>.</p>
+<p>Both right hand panes are <strong>tabbed</strong>. On first start-up, the top pane opens to the <em>environment</em> tab. This gives you a view of any data objects in memory in the current R session.</p>
+<p>The <strong>history</strong> tab is a list of commands executed in the console in the current session.</p>
+<p>You can view data objects and commands in history and you can clear out items from the environment or history.</p>
+<p>The lower of the two right hand panes shows a number of tabs each of which is a browser, for files, plots you create, packages installed, help files and web content.</p>
+<div id="section-the-console" class="section level5">
+<h5>The console</h5>
+<p>The console is where the R language interpreter runs. You can use the console interactively to compute things.</p>
+<p>You can for example compute <span class="math inline">\(2 + 2\)</span> like this (the result appears after you press enter.)</p>
+<pre class="r"><code>2+2</code></pre>
+<pre><code>## [1] 4</code></pre>
+</div>
+<div id="section-the-data-environment" class="section level5">
+<h5>The data environment</h5>
+<p>It is always important to keep watch on what is in the data environment and to know how to clear it when necessary.</p>
+<p>You can remove all data objects from memory with the brush icon.</p>
+<div class="figure">
+<img src="images/databrush.png" title="The data environment brush icon" alt="" />
+<p class="caption">The data environment brush</p>
+</div>
+</div>
+<div id="section-the-file-browser" class="section level5">
+<h5>The file browser</h5>
+<p>The file browser shows you files and folders stored locally.</p>
+<p>When you work on an R project you will need to be sure that your script executes in the correct working directory. You can use the <em>more</em> gear icon to set this.</p>
+<div class="figure">
+<img src="images/gear.png" alt="" />
+<p class="caption">The gear icon, used to set the working directory</p>
+</div>
+<p>R will look for files of data, or images, or scripts in the <em>current working directory</em> and if it does not find them then your project may fail to execute.</p>
+<p>Later you will learn how to set the working directory programmatically so that you can be sure your script will run correctly.</p>
+</div>
+<div id="section-the-viewer" class="section level5">
+<h5>The viewer</h5>
+<p>The viewer tab is where you can preview web content that you produce, for example web pages generated by RMarkdown scripts.</p>
+</div>
+<div id="section-the-plots-tab" class="section level5">
+<h5>The plots tab</h5>
+<p>This tab is where plots are previewed. They are not saved by default and you must either save them in your scripts or use the export button to save them outside of the IDE.</p>
+</div>
+<div id="section-the-packages-tab" class="section level5">
+<h5>The packages tab</h5>
+<p>One of the great features of the R language, is the large collection of <em>pakages</em> - user contributed extensions to the base R language. There are packages for all sorts of tasks, from sophisticated statistical routines, to software helper tools, to integration with other software systems (for example, git).</p>
+<p>This tab shows you which R <em>packages</em> are installed. We will talk about packages a little later.</p>
+</div>
+<div id="section-the-help-tab" class="section level5">
+<h5>the help tab</h5>
+<p>This is where help is shown for you. You can use a search tool bar in the pane or you can search from the console. To search for a function or procedure that you know you can type</p>
+<pre><code>?function-name</code></pre>
+<p>Of if you are unsure of the name, you can use a keyword search:</p>
+<pre><code>??keyword</code></pre>
+</div>
+<div id="section-adding-a-source-pane" class="section level5">
+<h5>Adding a source pane</h5>
+<p>You will almost always work with one other pane that does not show by default on start-up: the <em>source</em> pane.</p>
+<p>The source pane is where you edit R scripts and other documents, such as reports or presentations written in Rmarkdown.</p>
+<p>It is very good practice dealing with source files that you save them as soon as you create them. You should also be careful to always save a file with the correct extension. The extensions you will most commonly use are</p>
+<table>
+<thead>
+<tr class="header">
+<th>File extension</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>.R</td>
+<td>for R scripts</td>
+</tr>
+<tr class="even">
+<td>.Rmd</td>
+<td>for RMarkdown files</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="section-tools-and-preferences" class="section level4">
+<h4>Tools and preferences</h4>
+<p>The RStudio tools menu has some important functions. Perhaps the most useful at the start is the <em>install packages</em> dialog which provides you with a graphical interface for installing packages.</p>
+<p>Later you should explore the <em>global options</em> which will allow you to customise your editor for example or change the default layout of windows and panes in the IDE.</p>
+</div>
+</div>
+</div>
+<div id="section-computing-at-the-console" class="section level2">
+<h2>Computing at the console</h2>
+<p>As we learned above the console provides interaction with the R language interpreter. You can issue commands and R will respond (as long as the command is understandable!)</p>
+<div id="section-arithmetic" class="section level4">
+<h4>Arithmetic</h4>
+<p>Try the following code lines, making sure that the answers are correct.</p>
+<pre><code>3*7
+
+3*7+2
+
+3*(7+2)
+</code></pre>
+<div class="tutorial-exercise" data-label="additiontask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<p>Some arithmetic operations are achieved by calling <em>functions</em>. A function is a named operation followed by the data to operate on in parentheses.</p>
+<p>Try the following code where we use both <em>operators</em> (like ^) and functions (like sqrt() and mean()). The notation 1:10 is understood as the sequence of numbers beginning with one and ending with ten.</p>
+<pre><code>2**2
+2^2
+sqrt(4)
+mean(1:10)</code></pre>
+<div class="tutorial-exercise" data-label="moremaths" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<p>R also has some built in values, useful constants such as <em>pi</em>. Can you identify the following values?</p>
+<div class="tutorial-exercise" data-label="specialnumbers" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>pi
+
+exp(1)
+
+1i</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<p>If you are unsure try googling to find out.</p>
+</div>
+</div>
+<div id="section-the-first-lines-of-your-script" class="section level2">
+<h2>The first lines of your script</h2>
+<p>An R script is just a text file containing R code. You can plan your analysis, put the commands in a script and then execute the script; check the output; edit the script if corrections are necessary.</p>
+<p>You should normally name your scripts to end <strong>.R</strong> (Later we will write R report files using <strong>.Rmd</strong> instead, but for now, use <strong>.R</strong>).</p>
+<p>In a script, a line that begins <strong>#</strong> is a comment and will be ignored when the script is executed. You should use comments in your scripts, especially as a beginner, to explain what your code is doing. As you progress in R programming your comments will change. Rather than explaining your code (which should really be self-explanatory), your comments will address other programmers who may need to know about any unusual behaviour or requirements.</p>
+<p>Make a folder on your hard drive to store this project’s scripts. I will use this folder: <strong>C:/Users/ccaaj/FirstRProject</strong>Create a new script file in RStudio. Save it with the name <strong>FirstProject.R</strong>.</p>
+<p>Eventually, you will be creating scripts as parts of projects, but for now your script is standalone. For that reason, we will add two lines of housekeeping code:</p>
+<pre><code># set the correct working directory for the project
+setwd(&quot;~/FirstRProject&quot;)
+
+# remove any data objects in the current workspace
+rm(list = ls())</code></pre>
+<p>Add these lines and the comments now. Save the file in the project folder. Now use all the power of google to find out what the R function <strong>rm()</strong> does and what the parameter <strong>list = ls()</strong> means.</p>
+</div>
+<div id="section-variables" class="section level2">
+<h2>Variables</h2>
+<p>There is a good introduction to basic data types to supplement this brief guide at <a href="http://www.r-tutor.com/r-introduction">The R-Tutor Introduction to R</a>.</p>
+<div id="section-what-is-a-variable" class="section level5">
+<h5>What is a variable?</h5>
+<p>In data analytics and statistics, a variable is simply something that you measure or count - it may be a thing such as the women in a group, a characteristic of a thing such as the eye colour of the men in a group, or a quantity such as the age of children in a neonatal ward.</p>
+<p>In programming, including R programming, variable has an additional meaning. A variable, informally, is a name we can use to refer to a piece of information in computer memory. Examples might include today’s date; the dollar to pound exchange rate; the vat rate. We can assign to any value (numeric or otherwise) a name by which we can then refer to it.</p>
+</div>
+<div id="section-what-is-variable-assignment" class="section level5">
+<h5>What is variable assignment?</h5>
+<p>If we want to take the current temperature (it is a round 17<span class="math inline">\(^\circ\)</span>) and assign it the name <code>curtemp</code>, we write</p>
+<pre><code>curtemp &lt;- 17</code></pre>
+<p>Now, if we find that it has increased by one degree, we can write either</p>
+<pre><code>curtemp &lt;- 18</code></pre>
+<p>or</p>
+<pre><code>curtemp &lt;- curtemp + 1</code></pre>
+<p>both of which have the same effect.</p>
+</div>
+<div id="section-vectors-and-matrices" class="section level5">
+<h5>Vectors and matrices</h5>
+<p>Vectors are collections of values of the same kind (think all strings or all numbers). A vector in the simplest case is a single row of values (or column, but R doesn’t care in the case of simple vectors). So I can create a vector of the integers one to ten like this</p>
+<pre><code>myvector &lt;- 1:4</code></pre>
+<p>using the colon notation (:) to indicate a sequence.</p>
+<p>Of course not all vectors are sequences, so we have a function <strong>c()</strong> (which people often pronounce ‘collection’). So</p>
+<pre><code>myothervector &lt;- c(2, 4, 6, 8)</code></pre>
+<!-- cbind() -->
+<p>Now that we have two vectors, we can use them to create a matrix. There are two choices:</p>
+<ol style="list-style-type: decimal">
+<li>each of the originals can treated as a column in the new matrix;</li>
+<li>each of the originals can treated as a row in the new matrix;</li>
+</ol>
+<p>Here is the code to create new matrix from columns:</p>
+<pre><code>colmatrix &lt;- cbind(myvector, myothervector)</code></pre>
+<p>Run the three lines of code in this section on the RStudio console and then examine <strong>colmatrix</strong>.</p>
+</div>
+<div id="section-exercise-bind-two-vectors-to-a-matrix-as-rows" class="section level3">
+<h3>Exercise: bind two vectors to a matrix as rows</h3>
+<p>The previous code example bound the two vectors as columns. There is a function <strong>rbind()</strong> which binds vectors together as rows.</p>
+<p>Write the line to bind <strong>myvector</strong> and <strong>myothervector</strong> as rows in a matrix called <strong>rowmatrix</strong> and examine the result.</p>
+<div class="tutorial-exercise-support" data-label="prepare-vectors" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>myvector &lt;- 1:4
+myothervector &lt;- c(2, 4, 6, 8)</code></pre>
+</div>
+<div class="tutorial-exercise" data-label="rowbind" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>rowmatrix &lt;- rbind(myvector, myothervector)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"prepare-vectors","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="rowbind-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>rowmatrix &lt;- rbind(myvector, myothervector)</code></pre>
+</div>
+<p>To specify the <strong>dimensions</strong> of a matrix, we first give the number of rows in the matrix followed by the number of columns.</p>
+<div class="panel panel-default">
+<div data-label="dimrowmatrix" class="tutorial-question panel-body">
+<div id="dimrowmatrix-answer_container" class="shiny-html-output"></div>
+<div id="dimrowmatrix-message_container" class="shiny-html-output"></div>
+<div id="dimrowmatrix-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div id="section-more-sequences" class="section level4">
+<h4>More sequences</h4>
+<p>We have already created a vector as a sequence. We can use a different method when we want to control the increment of the vector.</p>
+<pre><code>myincrement &lt;- seq(1,10,2)</code></pre>
+<p>The resulting matrix will have only five elements: 1, 3,5,7,9</p>
+<p>The first parameter in the function <strong>seq()</strong> is the start number, the second is the upper limit of the sequence and the last is the step or increment.</p>
+</div>
+</div>
+<div id="section-exercise-creating-a-vector-as-a-sequence" class="section level3">
+<h3>Exercise: creating a vector as a sequence</h3>
+<p>Use <strong>seq()</strong> to create a vector called <strong>bythreesto99</strong> that begins with zero and increases by three with each item, until a limit of 99 is reached.</p>
+<div class="tutorial-exercise" data-label="increvect" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="increvect-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>bythreesto99 &lt;- seq(0,99,3)</code></pre>
+</div>
+</div>
+</div>
+<div id="section-finding-elements-in-vectors-and-matrices" class="section level2">
+<h2>Finding elements in vectors and matrices</h2>
+<p>Imagine a simple vector of numbers:</p>
+<pre><code>x&lt;-1:10</code></pre>
+<p>And now, let’s square the elements:</p>
+<pre><code>x&lt;-x^2</code></pre>
+<p>We can <strong>address</strong> individual parts of <strong>x</strong> using the <strong>index</strong>: the index of a vector in R starts at one and we write it</p>
+<pre><code>x[1]</code></pre>
+<p>We know that <strong>x</strong> has ten columns. So can find the last element of <strong>x</strong> with</p>
+<pre><code>x[10]</code></pre>
+<p>If we have the matrix <strong>mymatrix</strong></p>
+<!-- |   | 1 | 2 | 3 | -->
+<!-- |---|---|---|---| -->
+<!-- | 1 | 1 | 4 | 7 | -->
+<!-- | 2 | 2 | 5 | 8 | -->
+<!-- | 4 | 3 | 6 | 9 | -->
+<p><span class="math display">\[\begin{equation*}
+mymatrix =
+\begin{pmatrix}
+1 &amp; 2 &amp; 3 \\
+4 &amp; 5 &amp; 6 \\
+7 &amp; 8 &amp; 9
+\end{pmatrix}
+\end{equation*}\]</span></p>
+<p>We notice that it has potentially two ways to address each element. If we try</p>
+<pre><code>mymatrix[8]</code></pre>
+<p>and</p>
+<pre><code>mymatrix[2,3]</code></pre>
+<p>We see that the first example with a single index is counted top-down, left-right to pick the sixth element from the matrix. The second, specifies two indices the second row and third column. These are the same element.</p>
+<p>You see in the following example that we can use a <strong>sequence</strong> in the row and column specification to extract a sub-matrix:</p>
+<pre><code>    mymatrix[2:3,2:3]</code></pre>
+<p>gives</p>
+<pre><code>     [,1] [,2]
+[1,]    5    8
+[2,]    6    9</code></pre>
+<div id="section-exercise-extracting-elements-of-a-vector-or-matrix" class="section level3">
+<h3>Exercise: extracting elements of a vector or matrix</h3>
+<p>Create the vector <strong>x</strong> as the sequence of numbers 1:10. Create <strong>xsquare</strong> as a vector containing the values of <strong>x</strong> squared. Use <strong>rbind()</strong> to create a matrix <strong>xmat</strong> of these two vectors.</p>
+<p>Having created this new matrix, extract the sub-matrix</p>
+<pre><code>        [,1] [,2] [,3]
+x          3    4    5
+xsquare    9   16   25</code></pre>
+<div class="tutorial-exercise" data-label="extraction" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="extraction-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>x&lt;-1:10
+xsquare &lt;- x^2
+xmat &lt;- rbind(x,xsquare)
+xmat[1:2,3:5]</code></pre>
+</div>
+</div>
+</div>
+<div id="section-selection-with-logical-comparisons" class="section level2">
+<h2>Selection with logical comparisons</h2>
+<p>Selection from a vector or matrix involves identifying the data object and then using the square brackets ([,]) to pass either an index or some selection criteria. If I have the vector</p>
+<pre><code>myvector = (1,2,3,4,5,7)</code></pre>
+<p>Then</p>
+<pre><code>myvector[myvector&lt;5]</code></pre>
+<p>extracts the vector</p>
+<pre><code>(1,2,3,4)</code></pre>
+<p>Try the following code snippet:</p>
+<div class="tutorial-exercise" data-label="logicomp" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>newvector &lt;- 1:100
+
+uppervector &lt;- newvector[newvector&gt;50]
+uppervector
+
+evenvector &lt;- newvector[(newvector%%2)==0]
+evenvector</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<p>Write an explanation for these two selection statements which I will ask you to share in our online session.</p>
+</div>
+<div id="section-the-end-of-our-basic-introduction" class="section level2">
+<h2>The end of our basic introduction</h2>
+<p>Well, this has been something of a whilrwind tour. I am not going to introduce more of the basic R language now. There are a number of excellent tutorials that you can try if you want to take your knowledge of R itself futher. In no particular order:</p>
+<ul>
+<li><a href="http://r4ds.had.co.nz/">R for Data Science by Hadley Wickham</a></li>
+<li><a href="http://adv-r.hadley.nz/">Advanced R Programming by Hadley Wickham</a></li>
+<li><a href="https://www.statmethods.net/index.html">Quick-R by DataCamp</a></li>
+</ul>
+</div>
+<div id="section-beginning-data-analysis" class="section level2">
+<h2>Beginning data analysis</h2>
+<p>In the rest of this tutorial we will learn how to:</p>
+<ol style="list-style-type: decimal">
+<li>read data from a local or remote file into an R data object</li>
+<li>check and correct the types of variables in our data</li>
+<li>create new variables from old</li>
+<li>select subsets of data meeting various criteria</li>
+<li>create models of our data</li>
+</ol>
+<p>But before any of this, a reminder about <strong>R packages</strong>.</p>
+<p>Packages are libraries of R code that extend the functionality of base R in various ways. For example, the package <strong>ggplot2</strong> provides a simple framework for producing high quality graphs in R.</p>
+<p>There are some packages used by almost all R data analysts because they are so useful. Among these are the packages of the <a href="http://www.tidyverse.org">tidyverse</a>.</p>
+<p>The <strong>tidyverse</strong> package includes functions for data manipulation and management and plotting (and indeed more). I have already loaded the package for this tutorial and we can use some of its functions right from the start.</p>
+</div>
+<div id="section-reading-remote-data-files" class="section level2">
+<h2>Reading remote data files</h2>
+<p>There are several R functions to read data from a file. They are specialised according to the format of the data file.</p>
+<p>Perhaps the simplest is a plain text file with observations or cases in rows and variables separated by either spaces or tabs. These files are read with <strong>read.table()</strong></p>
+<p>If the file is held on a remote web server, then the argument passed to the function must be the full URL that leads to the file. Here is an example of its use</p>
+<pre><code>mydf = read.table(&quot;http://www.ucl.ac.uk/~ccaajim/results.txt&quot;)</code></pre>
+<p>This example code reads the file and stores the contents in an object called <strong>mydf</strong></p>
+<p>The file <em><em>results.txt</em></em> doesn’t exist at this address, so this code would fail.</p>
+<p>Instead, the data we will use is in the <em>comma separated values</em> format. It is located on a remote web server at the URL <a href="http://www.ucl.ac.uk/~ccaajim/results.csv" class="uri">http://www.ucl.ac.uk/~ccaajim/results.csv</a></p>
+<p>Although there is a base R function to do the job, we will use the tidyverse function to read this file: <em><strong>read_csv()</strong></em>.</p>
+<div id="section-exercise-reading-a-data-file" class="section level3">
+<h3>Exercise: reading a data file</h3>
+<p>Write and run the R code that will read the data from the file in the URL above and store it in an object called <em>resultsdf</em>.</p>
+<div class="tutorial-exercise" data-label="readresults" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="readresults-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>resultsdf &lt;- read_csv(&quot;http://www.ucl.ac.uk/~ccaajim/results.csv&quot;)</code></pre>
+</div>
+<p>Notice that this displays a summary of the data parsed when it completes.</p>
+</div>
+</div>
+<div id="section-more-lines-for-your-script" class="section level2">
+<h2>More lines for your script</h2>
+<p>Add the lines</p>
+<pre><code>#load packcages for data analysis
+library(tidyverse)
+library(psych)
+library(moments)
+
+#read remote datafile
+resultsdf &lt;- read_csv(&quot;http://www.ucl.ac.uk/~ccaajim/results.csv&quot;)</code></pre>
+<p>to your growing script.</p>
+<p>Find the documentation for each of these library packages on <strong>CRAN</strong> and also look at their help pages. When you have successully read in the data, check to see if any values in your data are greater than 80.</p>
+</div>
+<div id="section-viewing-data-in-rstudio" class="section level2">
+<h2>Viewing data in RStudio</h2>
+<p>The code you wrote to read the data results in a <em>tibble</em>: a modern take on the classic data table. If our data is properly set out, each row is a case and each column is a variable. This data is not quite properly <a href="https://en.wikipedia.org/wiki/Tidy_data"><em>tidy</em></a> but it will do.</p>
+<p>Now that you have created the data object, you can view the first few lines of data with <strong><em>head()</em></strong>.</p>
+<pre class="r"><code>head(resultsdf)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["surname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["teacher"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["maths"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["english"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["history"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"ADAMS","2":"2","3":"1","4":"55","5":"63","6":"65"},{"1":"ALI","2":"2","3":"1","4":"52","5":"46","6":"35"},{"1":"BAGAL","2":"1","3":"3","4":"51","5":"58","6":"55"},{"1":"BENJAMIN","2":"1","3":"2","4":"59","5":"70","6":"68"},{"1":"BLAKEMORE","2":"2","3":"2","4":"56","5":"38","6":"40"},{"1":"BUCHAN","2":"1","3":"3","4":"45","5":"62","6":"59"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>You should also try the R command <strong><em>View()</em></strong> which opens an attractive view of your data object in its own tab. Notice that <strong><em>View</em></strong> has a capital V.</p>
+</div>
+<div id="section-checking-the-structure-of-your-data" class="section level2">
+<h2>Checking the structure of your data</h2>
+<p>Data can be numeric or text, it may be integer data or it may it may involve fractional values (like the rational numbers). Text data may be represented as characters or as strings of characters.</p>
+<p>When you import data, R will try to work out what the correct representation is. It will certainly recognize obvious strings and numbers, but sometimes you may want to check, especially because R will not always recognize the correct <strong>level of measurement</strong>.</p>
+<p>As well as having a data type (such as text or numeric) variables may also be distinguished as <em>continuous</em> scores (on the interval or ratio scales) or <em>factors</em> (categorical data, both nominal and ordinal).</p>
+<p>In R, the important distinction is between factor and non-factor data, and within factors between <em>ordered</em> and non-ordered data.</p>
+<p>Now that you have downloaded the data set, you can check its structure. First, use the function <em><strong>names()</strong></em> to find out what the variables in your data set are called.</p>
+<div id="section-exercise-getting-variable-names" class="section level3">
+<h3>Exercise: getting variable names</h3>
+<pre><code>## Parsed with column specification:
+## cols(
+##   surname = col_character(),
+##   gender = col_double(),
+##   teacher = col_double(),
+##   maths = col_double(),
+##   english = col_double(),
+##   history = col_double()
+## )</code></pre>
+<div class="tutorial-exercise" data-label="namestask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="namestask-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>names(resultsdf)</code></pre>
+</div>
+<div class="panel panel-default">
+<div data-label="namesquiz" class="tutorial-question panel-body">
+<div id="namesquiz-answer_container" class="shiny-html-output"></div>
+<div id="namesquiz-message_container" class="shiny-html-output"></div>
+<div id="namesquiz-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<p>You can get more detail about the variables in your dataset with the <strong>str()</strong> function. Use this function to inspect <strong>resdf</strong>.</p>
+</div>
+<div id="section-exercise-the-structure-of-the-dataset" class="section level3">
+<h3>Exercise: the structure of the dataset</h3>
+<div class="tutorial-exercise" data-label="strtask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="strtask-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>str(resdf)</code></pre>
+</div>
+</div>
+<div id="section-exercise-answer-the-following-question." class="section level3">
+<h3>Exercise: answer the following question.</h3>
+<div class="panel panel-default">
+<div data-label="factortask" class="tutorial-question panel-body">
+<div id="factortask-answer_container" class="shiny-html-output"></div>
+<div id="factortask-message_container" class="shiny-html-output"></div>
+<div id="factortask-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+</div>
+<div id="section-exercise-a-glimpse-at-your-data" class="section level3">
+<h3>Exercise: a glimpse at your data</h3>
+<p>There is a tidyverse function <strong><em>glimpse</em></strong> which provides similar output but a little tidier. Try it below.</p>
+<div class="tutorial-exercise" data-label="glimpsetask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+</div>
+<div id="section-transforming-and-creating-variables" class="section level2">
+<h2>Transforming and creating variables</h2>
+<div id="section-setting-up-factors" class="section level3">
+<h3>Setting up factors</h3>
+<p>As we saw earlier, the two variables <em>gender</em> and <em>teacher</em> should be understood as factors but are currently identified by R as integer data.</p>
+<p>This is important, because if we were to do a regression analysis, for example, with <em>gender</em> as an independent variable, R would treat it as numeric giving quite the wrong results.</p>
+<p>To correct this, we will take the data set <em>resultsdf</em> and modify it by <em>mutating</em> the variable <em>gender</em>. There is an R function <strong><em>as.factor()</em></strong> that takes a numeric variable and <a href="https://en.wikipedia.org/wiki/Type_conversion"><em>coerces</em></a> it to be a factor.</p>
+<p>Our process will be to select the dataset results and then <em>pipe</em> it to the tidyverse function <strong><em>mutate</em></strong>, and instruct <strong><em>mutate</em></strong> to use <strong><em>as.factor()</em></strong> to convert it to a factor.</p>
+<p><strong>Piping</strong> is the action of sending the output of one R operation through to another R operation; through a pipe so to speak. We write pipe like this: %&gt;%. If you are reading your code and it contains a pipe, it is helpful to read the pipe symbol as <strong><em>then</em></strong>.</p>
+<p>So, first select the data set just by naming it, pass it through a pipe to mutate:</p>
+<pre class="r"><code>resultsdf %&gt;%
+    mutate(gender=as.factor(gender))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["surname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["teacher"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["maths"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["english"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["history"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"ADAMS","2":"2","3":"1","4":"55","5":"63","6":"65"},{"1":"ALI","2":"2","3":"1","4":"52","5":"46","6":"35"},{"1":"BAGAL","2":"1","3":"3","4":"51","5":"58","6":"55"},{"1":"BENJAMIN","2":"1","3":"2","4":"59","5":"70","6":"68"},{"1":"BLAKEMORE","2":"2","3":"2","4":"56","5":"38","6":"40"},{"1":"BUCHAN","2":"1","3":"3","4":"45","5":"62","6":"59"},{"1":"CHULANI","2":"1","3":"3","4":"63","5":"69","6":"69"},{"1":"CLARK","2":"2","3":"1","4":"52","5":"64","6":"65"},{"1":"DALE","2":"1","3":"2","4":"50","5":"55","6":"52"},{"1":"DE SOUZA","2":"1","3":"2","4":"44","5":"60","6":"62"},{"1":"DENCIK","2":"1","3":"3","4":"57","5":"67","6":"65"},{"1":"DOBLE","2":"1","3":"3","4":"64","5":"56","6":"65"},{"1":"DRURY","2":"2","3":"1","4":"50","5":"50","6":"49"},{"1":"EL-DANA","2":"2","3":"2","4":"62","5":"59","6":"60"},{"1":"FREEMAN","2":"1","3":"3","4":"52","5":"58","6":"62"},{"1":"FROGGATT","2":"2","3":"1","4":"39","5":"57","6":"59"},{"1":"GEORGARA","2":"2","3":"1","4":"56","5":"52","6":"50"},{"1":"JAN","2":"1","3":"3","4":"62","5":"63","6":"59"},{"1":"JENNER","2":"2","3":"2","4":"56","5":"67","6":"65"},{"1":"JUNCO","2":"1","3":"2","4":"48","5":"57","6":"55"},{"1":"LEFKARITIS","2":"1","3":"2","4":"53","5":"56","6":"59"},{"1":"LUKKA","2":"2","3":"1","4":"58","5":"59","6":"55"},{"1":"MILNER","2":"1","3":"3","4":"53","5":"62","6":"58"},{"1":"MIYAJI","2":"1","3":"3","4":"58","5":"66","6":"60"},{"1":"NICHOLSON","2":"2","3":"2","4":"55","5":"55","6":"58"},{"1":"PATEL","2":"2","3":"1","4":"60","5":"59","6":"54"},{"1":"PEIRIS","2":"1","3":"3","4":"60","5":"52","6":"55"},{"1":"RAMANI","2":"2","3":"1","4":"42","5":"43","6":"40"},{"1":"ROSEN","2":"2","3":"2","4":"54","5":"55","6":"54"},{"1":"ROWLANDS","2":"2","3":"1","4":"47","5":"50","6":"48"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>But this operation does <strong>not</strong> modify <em>resultsdf</em>.</p>
+<p>Try this code in the run-box below and add a call to <em><strong>str()</strong></em> to check the result.</p>
+<div class="tutorial-exercise" data-label="mutatefirsttask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<p>To modify our dataset we need to make R run this operation and write the output to a data object. In this case, we want R to <strong>overwrite</strong> the existing object <em>resultsdf</em>.</p>
+<p>Assignment of a value to a name is with the &lt;- operator. So the code will look something like this:</p>
+<pre><code>thedataset &lt;- thedataset %&gt;%
+    mutate(variablename=as.factor(variablename))</code></pre>
+<p>Can you modify this example code to correctly transform the <em>gender</em> and <em>teacher</em> variables to factors? Try below.</p>
+<div class="tutorial-exercise" data-label="mutatesecondtask" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="mutatesecondtask-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>resultsdf &lt;- resultsdf %&gt;%
+    mutate(gender=as.factor(gender)) %&gt;%
+    mutate(teacher=as.factor(teacher))</code></pre>
+</div>
+</div>
+<div id="section-creating-summary-variables" class="section level3">
+<h3>Creating summary variables</h3>
+<p>For each student we know their scores out of 100 in each of three tests: Maths, English and History. It would be useful to have a variable that summarizes their overall performance. A good candidate in this case is the <em>average</em> or <em>mean</em>. There are two ways we could calculate this in R. The first way is to do the maths ourselves:</p>
+<pre><code>average_exam = (maths + english + history)/3</code></pre>
+<p>In order to get the desired result, we will want to start with the tibble, <em>resultsdf</em> pipe it to a statement that will <em>select</em> which columns we want and pipe this subset of columns to a <em>mutate</em> statement.</p>
+<p>Since the first method above is so simple, in this case we could certainly use it. But we will try out the second method so as to build familiarity with the use of <em>pipes</em> and tidyverse functions.</p>
+<p>The code should have this structure:</p>
+<pre><code>mytibble %&gt;%
+    mutate(new_value = arithemetic)
+</code></pre>
+<p>See if you can write the code that will create this new variable - <em>average_exam</em> - for our <em>resultsdf</em> dataset. Add a command to R to view a few lines of the data after your mutation.</p>
+<div class="tutorial-exercise" data-label="avxmtaskone" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="avxmtaskone-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>resultsdf &lt;- resultsdf %&gt;%
+    mutate(average_exam=(maths+english+history)/3)
+
+head(resultsdf)</code></pre>
+</div>
+<p>In my solution, I added a call to head so that we can eyeball the results.</p>
+<p>Of course, you can use any mathematical procedure to <em>mutate</em> a new variable. You could for example take the log of a skewed variable if you wished.</p>
+</div>
+</div>
+<div id="section-generating-a-new-ranking-variable" class="section level2">
+<h2>Generating a new ranking variable</h2>
+<div class="tutorial-exercise-support" data-label="prepare-results" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>resultsdf &lt;- read_csv(&quot;http://www.ucl.ac.uk/~ccaajim/results.csv&quot;)
+resultsdf &lt;- resultsdf %&gt;%
+    mutate(gender, factor(gender))
+resultsdf &lt;- resultsdf %&gt;%
+    mutate(teacher, factor(teacher))
+resultsdf &lt;- resultsdf %&gt;%
+    mutate(average_exam=(maths+english+history)/3)
+resultsdf&lt;-resultsdf %&gt;%
+    mutate(average_exam = round(average_exam)) %&gt;%
+    mutate(stream = factor(cut(average_exam,
+                                                         breaks = c(0,49,59,100)),
+                                                 ordered = TRUE,
+                                                 labels =  c(&quot;three&quot;,&quot;two&quot;,&quot;one&quot;)))
+
+myvector &lt;- 1:4</code></pre>
+</div>
+<p>We will now create a new variable based on the <em>average_exam</em> variable just created.</p>
+<p>We want to <em>cut</em> the continuous variable <em>average_exam</em> into three, distinct categorical levels which are ordered. This is just like awarding bronze, silver or gold medals based on times in an Olympic sprint.</p>
+<p>We will once again overwrite <em>resultsdf</em> with a new version containing this mutated variable. The calculation in the <em>mutate</em> clause can be done with the R function <em><em>cut()</em></em>.</p>
+<p><em><em>cut()</em></em> takes some data and a set of break points and uses the break points to divide the scores into a set of ordered groups.</p>
+<p>Let’s experiment. We can create a vector of integers one to ten and cut it with into three groups.</p>
+<p>There are two ways in which this could be done. First we can use a <em>conditional</em> R language structure:</p>
+<pre><code>vec &lt;- 1:10
+
+cutvec &lt;- ifelse(vec&gt;=6,1,
+    ifelse(vec&lt;5,3,
+    2))
+
+head(rbind(vec,cutvec))</code></pre>
+<p>Or we can use the <em><em>cut()</em></em> function:</p>
+<pre><code>vec &lt;- 1:10
+
+cutvec &lt;- ordered(cut(vec, breaks = c(0,4.99,5.99,10)))
+
+head(rbind(vec,cutvec))
+</code></pre>
+<p>It may help to think of this as a way of writing three pairs of <em>floor</em> and <em>ceiling</em>, where the value specified by floor is <em>excluded</em> from that interval and the value specified by ceiling is <em>included</em> in the interval.</p>
+<p>The result of cut is a <em>factor</em>, but it is not ordered. To make it an ordered factor, we must wrap the cut expression inside the function <em><em>ordered</em></em>. Try this below for <em>cutvec</em> described in the above example, but with values one to one hundred.</p>
+<div class="tutorial-exercise" data-label="cutexercise" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"prepare-results","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="cutexercise-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>vec &lt;- 1:100
+cutvec &lt;- ordered(cut(vec, breaks = c(0,49,59,100)))
+head(rbind(vec,cutvec))</code></pre>
+</div>
+<p>Our task is very similar, we must create an ordered variable from a cut of the average exam scores.</p>
+<p>If we have integer values for <em>average_exam</em> this will be easy. We don’t and so we should <em>round</em> the variable before we cut it.</p>
+<p>So, cut <em>stream</em> into three ranks, those below fifty, from fifty to fifty nine and those above 60. Ensure that the result is ordered with labels, <em>three</em>, <em>two</em>, <em>one</em>.</p>
+<div class="tutorial-exercise" data-label="stream" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"prepare-results","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="stream-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>resultsdf&lt;-resultsdf %&gt;%
+    mutate(average_exam = round(average_exam)) %&gt;%
+    mutate(stream = factor(cut(average_exam,
+                    breaks = c(0,49,59,100)),
+                    ordered = TRUE,
+                    labels =  c(&quot;three&quot;,&quot;two&quot;,&quot;one&quot;)))
+
+head(resultsdf)</code></pre>
+</div>
+</div>
+<div id="section-creating-subsets-of-data" class="section level2">
+<h2>Creating subsets of data</h2>
+<p>It is often useful to create subsets your data.</p>
+<div id="section-selecting-rows" class="section level3">
+<h3>Selecting rows</h3>
+<p>We will first look at creating subsets by selecting rows. We will pass the <strong>resultsdf</strong> data through a pipe <code>%&gt;%</code> to the <strong>filter</strong> verb (or procedure if you prefer), setting the criterion for inclusion in the subset to be gender is 1. The result will be saved in a tibble called <strong>fstudents</strong>. Here is the code:</p>
+<pre><code>fstudents &lt;- resultsdf %&gt;%
+    filter(gender==1)
+
+fstudents</code></pre>
+<p>And here is the result:</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["surname"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["teacher"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["maths"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["english"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["history"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"BAGAL","2":"1","3":"3","4":"51","5":"58","6":"55"},{"1":"BENJAMIN","2":"1","3":"2","4":"59","5":"70","6":"68"},{"1":"BUCHAN","2":"1","3":"3","4":"45","5":"62","6":"59"},{"1":"CHULANI","2":"1","3":"3","4":"63","5":"69","6":"69"},{"1":"DALE","2":"1","3":"2","4":"50","5":"55","6":"52"},{"1":"DE SOUZA","2":"1","3":"2","4":"44","5":"60","6":"62"},{"1":"DENCIK","2":"1","3":"3","4":"57","5":"67","6":"65"},{"1":"DOBLE","2":"1","3":"3","4":"64","5":"56","6":"65"},{"1":"FREEMAN","2":"1","3":"3","4":"52","5":"58","6":"62"},{"1":"JAN","2":"1","3":"3","4":"62","5":"63","6":"59"},{"1":"JUNCO","2":"1","3":"2","4":"48","5":"57","6":"55"},{"1":"LEFKARITIS","2":"1","3":"2","4":"53","5":"56","6":"59"},{"1":"MILNER","2":"1","3":"3","4":"53","5":"62","6":"58"},{"1":"MIYAJI","2":"1","3":"3","4":"58","5":"66","6":"60"},{"1":"PEIRIS","2":"1","3":"3","4":"60","5":"52","6":"55"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="section-exercise-simple-selection-by-row-criterion" class="section level2">
+<h2>Exercise: simple selection by row criterion</h2>
+<p>Modify the example selection code so as to select only the students where gender = 1.</p>
+<div class="tutorial-exercise" data-label="selectrowsone" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"prepare-results","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="selectrowsone-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>fstudents &lt;- resultsdf %&gt;%
+    filter(gender==1)
+
+fstudents</code></pre>
+</div>
+</div>
+<div id="section-exercise-selection-by-compound-criterion" class="section level2">
+<h2>Exercise: selection by compound criterion</h2>
+<p>Modify the example selection code so as to select only the students where gender = 2 and teacher = 2.</p>
+<div class="tutorial-exercise" data-label="selectrowstwo" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.setup":"prepare-results","exercise.checker":"NULL"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="selectrowstwo-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>fstudents &lt;- resultsdf %&gt;%
+    filter(gender==2 &amp; teacher == 2)
+
+fstudents</code></pre>
+</div>
+
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+library(tidyverse)
+# library(reticulate)
+knitr::opts_chunk$set(echo = FALSE)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+session$onSessionEnded(function() {
+        learnr:::session_stop_event(session)
+      })
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-additiontask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-additiontask-code-editor`)), session)
+output$`tutorial-exercise-additiontask-output` <- renderUI({
+  `tutorial-exercise-additiontask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-moremaths-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-moremaths-code-editor`)), session)
+output$`tutorial-exercise-moremaths-output` <- renderUI({
+  `tutorial-exercise-moremaths-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-specialnumbers-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-specialnumbers-code-editor`)), session)
+output$`tutorial-exercise-specialnumbers-output` <- renderUI({
+  `tutorial-exercise-specialnumbers-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-rowbind-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-rowbind-code-editor`)), session)
+output$`tutorial-exercise-rowbind-output` <- renderUI({
+  `tutorial-exercise-rowbind-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "dimrowmatrix",     question = structure("What are the dimensions of rowmatrix?", html = TRUE, class = c("html",     "character")), answers = list(structure(list(id = "lnr_ans_48c8fac",         option = "2,1", value = "2,1", label = structure("2,1", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_7c73ea7",         option = "4,2", value = "4,2", label = structure("4,2", html = TRUE, class = c("html",         "character")), correct = FALSE, message = structure("Almost, this is columns followed by rows!", html = TRUE, class = c("html",         "character"))), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_b760ab7",         option = "2,4", value = "2,4", label = structure("2,4", html = TRUE, class = c("html",         "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e5e0d8b",         option = "2,2", value = "2,2", label = structure("2,2", html = TRUE, class = c("html",         "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer",     "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html",     "character")), try_again = structure("Try Again", html = TRUE, class = c("html",     "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html",     "character")), try_again = structure("Incorrect", html = TRUE, class = c("html",     "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html",     "character")), message = NULL, post_message = NULL), ids = list(        answer = "dimrowmatrix-answer", question = "dimrowmatrix"),     loading = structure("<strong>Loading:<\u002fstrong> \nWhat are the dimensions of rowmatrix?\n<br/><br/><br/>", html = TRUE, class = c("html",     "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1017999322.52596, options = list()), class = c("learnr_radio", "tutorial_question")))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-increvect-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-increvect-code-editor`)), session)
+output$`tutorial-exercise-increvect-output` <- renderUI({
+  `tutorial-exercise-increvect-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-extraction-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-extraction-code-editor`)), session)
+output$`tutorial-exercise-extraction-output` <- renderUI({
+  `tutorial-exercise-extraction-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-logicomp-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-logicomp-code-editor`)), session)
+output$`tutorial-exercise-logicomp-output` <- renderUI({
+  `tutorial-exercise-logicomp-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-readresults-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-readresults-code-editor`)), session)
+output$`tutorial-exercise-readresults-output` <- renderUI({
+  `tutorial-exercise-readresults-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-namestask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-namestask-code-editor`)), session)
+output$`tutorial-exercise-namestask-output` <- renderUI({
+  `tutorial-exercise-namestask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "namesquiz", question = structure("which of the following is <em>not<\u002fem> the name of a variable in this dataset?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_4d7a116",     option = "surname", value = "surname", label = structure("surname", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_501966a",     option = "age", value = "age", label = structure("age", html = TRUE, class = c("html",     "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_69081cb",     option = "gender", value = "gender", label = structure("gender", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_224a867",     option = "teacher", value = "teacher", label = structure("teacher", html = TRUE, class = c("html",     "character")), correct = FALSE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("No, that&#39;s definitely in the dataset.", html = TRUE, class = c("html", "character")), incorrect = structure("No, that&#39;s definitely in the dataset.", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "namesquiz-answer", question = "namesquiz"), loading = structure("<strong>Loading:<\u002fstrong> \nwhich of the following is <em>not<\u002fem> the name of a variable in this dataset?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1712593034.20251, options = list()), class = c("learnr_radio", "tutorial_question")))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-strtask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-strtask-code-editor`)), session)
+output$`tutorial-exercise-strtask-output` <- renderUI({
+  `tutorial-exercise-strtask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "factortask", question = structure("Which of the variables are currently factors?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_2ed6ce9",     option = "surname", value = "surname", label = structure("surname", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("This is a string variable, but with one value for each row in the data, it is not likely a factor.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_14f017b", option = "gender",     value = "gender", label = structure("gender", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("This variable probably should be factor but currently is not.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_7a9d8dc", option = "teacher",     value = "teacher", label = structure("teacher", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("This variable probably should be a factor but currently is not.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_8560aa4", option = "All of the above",     value = "All of the above", label = structure("All of the above", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("These variables probably should all be factors but currently only one is.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_5cc5056", option = "None of the above",     value = "None of the above", label = structure("None of the above", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("These variables probably should all be factors but currently none is.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "factortask-answer", question = "factortask"), loading = structure("<strong>Loading:<\u002fstrong> \nWhich of the variables are currently factors?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 1790324008.16632, options = list()), class = c("learnr_radio", "tutorial_question")))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-glimpsetask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-glimpsetask-code-editor`)), session)
+output$`tutorial-exercise-glimpsetask-output` <- renderUI({
+  `tutorial-exercise-glimpsetask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-mutatefirsttask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-mutatefirsttask-code-editor`)), session)
+output$`tutorial-exercise-mutatefirsttask-output` <- renderUI({
+  `tutorial-exercise-mutatefirsttask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-mutatesecondtask-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-mutatesecondtask-code-editor`)), session)
+output$`tutorial-exercise-mutatesecondtask-output` <- renderUI({
+  `tutorial-exercise-mutatesecondtask-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-avxmtaskone-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-avxmtaskone-code-editor`)), session)
+output$`tutorial-exercise-avxmtaskone-output` <- renderUI({
+  `tutorial-exercise-avxmtaskone-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-cutexercise-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-cutexercise-code-editor`)), session)
+output$`tutorial-exercise-cutexercise-output` <- renderUI({
+  `tutorial-exercise-cutexercise-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-stream-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-stream-code-editor`)), session)
+output$`tutorial-exercise-stream-output` <- renderUI({
+  `tutorial-exercise-stream-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-selectrowsone-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-selectrowsone-code-editor`)), session)
+output$`tutorial-exercise-selectrowsone-output` <- renderUI({
+  `tutorial-exercise-selectrowsone-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-selectrowstwo-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-selectrowstwo-code-editor`)), session)
+output$`tutorial-exercise-selectrowstwo-output` <- renderUI({
+  `tutorial-exercise-selectrowstwo-result`()
+})
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["default.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.css","css/v4-shims.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.3"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["idb-keyvalue"]},{"type":"character","attributes":{},"value":["3.2.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/idb-keyval"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["idb-keyval-iife-compat.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1"]}]}]}
+</script>
+<!--/html_preserve-->
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="execution_dependencies">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","broom","cellranger","checkmate","cli","colorspace","compiler","crayon","curl","datasets","DBI","dbplyr","digest","dplyr","ellipsis","evaluate","fansi","fastmap","forcats","fs","generics","ggplot2","glue","graphics","grDevices","grid","gtable","haven","hms","htmltools","htmlwidgets","httpuv","httr","jsonlite","knitr","later","lattice","learnr","lifecycle","lubridate","magrittr","markdown","methods","mime","modelr","munsell","nlme","pillar","pkgconfig","promises","purrr","R6","Rcpp","readr","readxl","reprex","rlang","rmarkdown","rprojroot","rstudioapi","rvest","scales","shiny","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.1.6","4.0.0","0.5.6","1.1.0","2.0.0","2.0.2","1.4-1","4.0.0","1.3.4","4.3","4.0.0","1.1.0","1.4.3","0.6.25","0.8.5","0.3.0","0.14","0.4.1","1.0.1","0.5.0","1.4.1","0.0.2","3.3.0","1.4.0","4.0.0","4.0.0","4.0.0","0.3.0","2.2.0","0.5.3","0.4.0","1.5.1","1.5.2","1.4.1","1.6.1","1.28","1.0.0","0.20-41","0.10.1","0.2.0","1.7.8","1.5","1.1","4.0.0","0.9","0.1.8","0.5.0","3.1-147","1.4.3","2.0.3","1.1.0","0.3.4","2.4.1","1.0.4.6","1.3.1","1.3.1","0.3.0","0.4.6","2.3","1.3-2","0.11","0.3.5","1.1.0","1.4.0.2","4.0.0","1.4.6","1.4.0","3.0.1","1.1.0","1.1.0","1.3.0","4.0.0","4.0.0","0.3.0","2.2.0","0.13","1.3.2","1.8-4","2.2.1"]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">First Steps in Data Analysis with R</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+</body>
+
+</html>
